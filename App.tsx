@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet, Text, View, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native';
 
 export default function App() {
+  
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
