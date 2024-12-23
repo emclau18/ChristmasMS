@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet, Text, View, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, Dimensions, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
@@ -18,7 +18,7 @@ type RootStackParamList = {
   gallery: undefined;
   timeline: undefined;
   messages: undefined;
-  favs: undefined
+  favs: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -31,12 +31,8 @@ type HomeScreenProps = {
 
 function HomeScreen({ navigation }: HomeScreenProps) {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        keyboardShouldPersistTaps="handled"
-        style={styles.container}
-      >
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Ellie McLaughlin and Michael Shanley</Text>
           <Text style={styles.subtitle}>Memories Over the Years</Text>
@@ -48,47 +44,46 @@ function HomeScreen({ navigation }: HomeScreenProps) {
           <Image source={require('./assets/door.jpg')} style={styles.photo} />
         </View>
         <View style={styles.whiteSection}>
-          <Image source={require('./assets/backgroundsunset.jpg')} style={styles.fadedPhoto} />
-          <View style={styles.overlay}>
-            <View style={styles.boxRow}>
-              <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('dates')}>
-                <Text style={styles.boxText}>Date Hall of Fame</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('rest')}>
-                <Text style={styles.boxText}>Restaurants</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.boxRow}>
-              <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('gallery')}>
-                <Text style={styles.boxText}>Photo Gallery</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('timeline')}>
-                <Text style={styles.boxText}>Timeline</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.boxRow}>
-              <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('messages')}>
-                <Text style={styles.boxText}>Messages</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('favs')}>
-                <Text style={styles.boxText}>Favorite Things</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+  <Image source={require('./assets/backgroundsunset.jpg')} style={styles.fadedPhoto} />
+  <View style={styles.overlay}>
+    <View style={styles.boxContainer}>
+      <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('dates')}>
+        <Text style={styles.boxText}>Dates</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('rest')}>
+        <Text style={styles.boxText}>Restaurants</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('gallery')}>
+        <Text style={styles.boxText}>Gallery</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('timeline')}>
+        <Text style={styles.boxText}>Timeline</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('messages')}>
+        <Text style={styles.boxText}>Messages</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('favs')}>
+        <Text style={styles.boxText}>Favorites</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</View>
+
         <StatusBar style="auto" />
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
-
-
 
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen 
+          name="Home" 
+          component={HomeScreen} 
+          options={{ headerShown: false }} // Hide the header for the Home screen
+        />
         <Stack.Screen name="dates" component={DatesScreen} />
         <Stack.Screen name="rest" component={RestScreen} />
         <Stack.Screen name="gallery" component={GalleryScreen} />
@@ -101,8 +96,13 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   container: {
     flex: 1,
+    justifyContent: 'space-between',
+    backgroundColor: '#FFF',
   },
   header: {
     backgroundColor: '#E0F7FA',
@@ -110,13 +110,13 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 32,
+    fontSize: 24,
     fontFamily: 'lobster',
     color: '#000',
     marginBottom: 10,
   },
   subtitle: {
-    fontSize: 24,
+    fontSize: 18,
     fontFamily: 'lobster',
     color: '#000',
     marginBottom: 5,
@@ -124,22 +124,23 @@ const styles = StyleSheet.create({
   photoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
     paddingHorizontal: 5,
     backgroundColor: '#E0F7FA',
+    height: '40%',
   },
   photo: {
     flex: 1,
-    height: Dimensions.get('window').width / 3,
+    height: '100%',
     resizeMode: 'cover',
     marginHorizontal: 2,
     borderRadius: 8,
   },
   whiteSection: {
+    flex: 1,
     position: 'relative',
     backgroundColor: '#FFF',
     alignItems: 'center',
-    padding: 20,
+    justifyContent: 'flex-start',
   },
   fadedPhoto: {
     position: 'absolute',
@@ -152,47 +153,29 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: '100%',
+    padding: 10,
     zIndex: 1,
   },
-  boxRow: {
+  boxContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap', // Enable wrapping for a grid layout
     justifyContent: 'space-between',
-    width: '300%',
-    marginVertical: 10,
-    paddingHorizontal: 10,
+    width: '100%',
   },
   box: {
     backgroundColor: '#E0F7FA',
-    width: '48%',
-    height: 120,
+    width: `${100 / 6 - 1}%`, // Divide the width into six equal parts with spacing
+    aspectRatio: 1, // Make the box a square
     alignItems: 'center',
     justifyContent: 'center',
+    marginVertical: 5,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#000',
   },
-  // boxText: {
-  //   fontSize: 20,
-  //   color: '#000',
-  //   fontFamily: 'lobster',
-  // },
-  cardBox: {
-    backgroundColor: '#FFF',
-    width: '48%',
-    height: 180,
-    borderRadius: 8,
-    overflow: 'hidden',
-    margin: 4,
-  },
-  cardImage: {
-    width: '100%',
-    height: 120,
-    resizeMode: 'cover',
-  },
   boxText: {
-    fontSize: 16,
+    fontSize: 15,
     color: '#000',
     fontFamily: 'lobster',
     textAlign: 'center',
